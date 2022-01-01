@@ -1,0 +1,88 @@
+x <- c(1,2,3,4,5,6)   # Create ordered collection (vector)
+y <- x^2              # Square the elements of x
+print(y)              # print (vector) y
+[1]  1  4  9 16 25 36
+
+mean(y)               # Calculate average (arithmetic mean) of (vector) y; result is scalar
+[1] 15.16667
+var(y)                # Calculate sample variance
+[1] 178.9667
+lm_1 <- lm(y ~ x)     # Fit a linear regression model "y = f(x)" or "y = B0 + (B1 * x)" 
+                        # store the results as lm_1
+print(lm_1)           # Print the model from the (linear model object) lm_1
+
+Call:
+lm(formula = y ~ x)
+
+Coefficients:
+(Intercept)            x  
+     -9.333        7.000 
+
+summary(lm_1)          # Compute and print statistics for the fit
+                         # of the (linear model object) lm_1
+
+Call:
+lm(formula = y ~ x)
+
+Residuals:
+1       2       3       4       5       6
+3.3333 -0.6667 -2.6667 -2.6667 -0.6667  3.3333
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)  -9.3333     2.8441  -3.282 0.030453 *
+x             7.0000     0.7303   9.585 0.000662 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 3.055 on 4 degrees of freedom
+Multiple R-squared: 0.9583,	Adjusted R-squared: 0.9478
+F-statistic: 91.88 on 1 and 4 DF,  p-value: 0.000662
+
+par(mfrow=c(2, 2))     # Request 2x2 plot layout
+plot(lm_1)             # Diagnostic plot of regression model
+
+########
+Código R curto calcula o modelo de Mandelbrot (Mandelbrot set) através das primeiras 20 iterações da equação z = z² + c mapeados para diferentes constantes complexas c. Este exemplo demonstra:
+
+O uso de livrarias externas (chamadas pacotes) desenvolvidas pela comunidade, neste caso, o pacote caTools
+Manipulação de número complexo.
+Matrizes multidimensionais de números usados como tipos de dados básicos, ver variáveis C, Z e X.
+library(caTools)         # external package providing write.gif function
+jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", 
+                                 "yellow", "#FF7F00", "red", "#7F0000")) 
+m <- 1200                # define size
+C <- complex( real=rep(seq(-1.8,0.6, length.out=m), each=m ), 
+              imag=rep(seq(-1.2,1.2, length.out=m), m ) ) 
+C <- matrix(C,m,m)       # reshape as square matrix of complex numbers
+Z <- 0                   # initialize Z to zero
+X <- array(0, c(m,m,20)) # initialize output 3D array
+for (k in 1:20) {        # loop with 20 iterations
+  Z <- Z^2+C             # the central difference equation  
+  X[,,k] <- exp(-abs(Z)) # capture results
+} 
+write.gif(X, "Mandelbrot.gif", col=jet.colors, delay=100)
+
+###########
+## Leitura do conjunto de dados. Também pode-se usar read.csv() quando os dados estiverem em arquivos .csv
+dados <- read.table("escreva a localização do arquivo...", header=TRUE) %colunas com tratamentos (tratam c/ titulo) e n-linhas (repet).
+
+## Preparação de dados
+dados.vetor <- c(dados$trat1, dados$trat2, dados$trat3, dados$trat4) %pode ser com qualquer quantidade de tratamentos.
+N <- gl(trat, repeticoes) %escreva o número de tratamentos e o tratamento com maior número de repetições.
+dados.vert <- data.frame(N, dados.vetor)
+fator <- factor(Loc) % fatores são variáveis tratadas como variáveis categóricas no R. 
+
+## Cáculo da tabela ANOVA
+pre_anova <- aov(dados.vetor~fator)
+ANOVA <- summary(pre_anova) 
+
+## Fazendo teste de Tukey, teremos:
+TukeyHSD(pre_anova, ordered=TRUE)
+plot(TukeyHSD(bruto.aov, ordered=TRUE))
+
+sk5 <- SK(x=dados, y=dados.vert$dados.vetor, model="y~fator", which="fator",sig.level=0.05)
+summary(sk5)
+
+
+##########
