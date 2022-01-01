@@ -1,0 +1,83 @@
+#
+#  K-means implementado por Kássio Ferreira e João Eudes
+#  INPUT: uma MATRIZ de dados, em que os objetos estão nas linhas e as varíaveis nas colunas.
+#  OUTPUT: uma lista com os k grupos e a classificação de cada objeto.
+#
+
+kMeans1 <- function(dados, k=2){
+  
+  # função que calcula a distância euclidiana
+  euc.dist <- function(x1, x2) sum((x1 - x2) ^ 2)
+  
+  # labels
+  rotulo = 1:k
+  rownames(dados)[nrow(dados)]= 1
+  
+  # random centroids
+  for(i in 1:nrow(dados)){
+    rownames(dados)[i] <- sample(rotulo,1)
+  }
+  
+  centroids <- colMeans(dados[rownames(dados) == 1, ])
+  
+  for(j in 2:k){
+    centroids <- rbind(centroids, colMeans(dados[rownames(dados) == j, ]))
+  }
+
+  rownames(centroids) = 1:k #  identifica o centroide de cada grupo
+
+  for(i in 1:nrow(dados)){
+    distancias = NULL
+    for(j in 1:k){
+      distancias[j] = euc.dist(dados[i,], centroids[j,])
+    }
+    names(distancias) = 1:k
+ #   print(distancias)
+    rownames(dados)[i] = as.numeric(names(distancias[distancias == min(distancias)]))
+    
+    # recalcula as medias
+    
+     centroids <- colMeans(dados[rownames(dados) == 1, ])
+     
+     for(z in 2:k){
+       centroids <- rbind(centroids, colMeans(dados[rownames(dados) == z, ]))
+     }
+    
+    
+  }
+#  centroids
+  
+  return(list(centroides = centroids, grupo1 = dados[rownames(dados) == 1, ],
+              grupo2 = dados[rownames(dados) == 2, ],
+              grupo3 = dados[rownames(dados) == 3, ],
+              clusters = as.numeric(rownames(dados))))
+}
+
+
+
+##  Exemplo 1: Classificação de dados iris
+
+dados = as.matrix(iris[ ,1:4])
+exemplo = kMeans1(dados,k=4)
+# exemplo$grupo1
+# exemplo$grupo2
+# exemplo$grupo3
+plot(dados,col = exemplo$clusters+1,  main="K-Means result with 4 clusters", pch=20, cex=2)
+
+
+# utilizando o método implementado no R:
+km2 = kmeans(dados,4)
+plot(dados, col =(km2$cluster +1) , main="K-Means result with 4 clusters", pch=20, cex=2)
+
+Classificando os dados attitude:
+dados2 = as.matrix(attitude[,c(3,4)]) 
+exemplo2 = kMeans1(dados2, k=3)
+# exemplo2$grupo1
+# exemplo2$grupo2
+# exemplo2$grupo3
+plot(dados2,col = exemplo2$clusters+1,  main="K-Means result with 3 clusters", pch=20, cex=2)
+
+# utilizando o método implementado no R:
+km3 = kmeans(dados2,3)
+plot(dados2, col =(km3$cluster +1) , main="K-Means result with 3 clusters", pch=20, cex=2)
+
